@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TicimaxTask.DAL\TicimaxTask.DAL.csproj" />
+    <ProjectReference Include="..\TicimaxTask.Entities\TicimaxTask.Entitiy.csproj" />
+    <ProjectReference Include="..\TicimaxTask.Shared\TicimaxTask.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

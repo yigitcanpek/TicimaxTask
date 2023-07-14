@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicimaxTask.Entitiy", "TicimaxTask.Entities\TicimaxTask.Entitiy.csproj", "{07E244FF-DBDF-4228-8B36-88BBEBBF446D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicimaxTask.MAP", "TicimaxTask.MAP\TicimaxTask.MAP.csproj", "{7B3A88CD-92E1-4DB4-A358-AD034CD74074}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicimaxTask.DAL", "TicimaxTask.DAL\TicimaxTask.DAL.csproj", "{3E472CF0-20A9-4544-9E5A-E046658A1A58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicimaxTask.BLL", "TicimaxTask.BLL\TicimaxTask.BLL.csproj", "{EE63D81C-009B-4052-BDF1-5BB0476199E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicimaxTask.Shared", "TicimaxTask.Shared\TicimaxTask.Shared.csproj", "{59495992-9D71-486E-BF5C-D23F7B6AD111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicimaxTask.MovementAPI", "TicimaxTask.MovementAPI\TicimaxTask.MovementAPI.csproj", "{88752024-1E01-4A11-8AED-EB72EC00E194}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07E244FF-DBDF-4228-8B36-88BBEBBF446D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07E244FF-DBDF-4228-8B36-88BBEBBF446D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07E244FF-DBDF-4228-8B36-88BBEBBF446D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07E244FF-DBDF-4228-8B36-88BBEBBF446D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B3A88CD-92E1-4DB4-A358-AD034CD74074}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B3A88CD-92E1-4DB4-A358-AD034CD74074}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B3A88CD-92E1-4DB4-A358-AD034CD74074}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B3A88CD-92E1-4DB4-A358-AD034CD74074}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E472CF0-20A9-4544-9E5A-E046658A1A58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E472CF0-20A9-4544-9E5A-E046658A1A58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E472CF0-20A9-4544-9E5A-E046658A1A58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E472CF0-20A9-4544-9E5A-E046658A1A58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE63D81C-009B-4052-BDF1-5BB0476199E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE63D81C-009B-4052-BDF1-5BB0476199E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE63D81C-009B-4052-BDF1-5BB0476199E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE63D81C-009B-4052-BDF1-5BB0476199E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59495992-9D71-486E-BF5C-D23F7B6AD111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59495992-9D71-486E-BF5C-D23F7B6AD111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59495992-9D71-486E-BF5C-D23F7B6AD111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59495992-9D71-486E-BF5C-D23F7B6AD111}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88752024-1E01-4A11-8AED-EB72EC00E194}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88752024-1E01-4A11-8AED-EB72EC00E194}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88752024-1E01-4A11-8AED-EB72EC00E194}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88752024-1E01-4A11-8AED-EB72EC00E194}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9AAE3612-2C7C-4CE4-ACB0-0720AEA0A393}
+	EndGlobalSection
+EndGlobal
