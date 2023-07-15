@@ -17,6 +17,6 @@ namespace TicimaxTask.Entities.Entities.Models
 
         public CheckStatus? CheckStatus { get; set; }
 
-        public List<CheckInOut> Checks { get; set; }
+        public List<CheckInOut>? Checks { get; set; }
     }
 }

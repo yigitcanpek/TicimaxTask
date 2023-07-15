@@ -19,13 +19,12 @@ namespace TicimaxTask.DAL.PostgreSqlDb
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
             modelBuilder.ApplyConfiguration(new AppUserConfiguration());
             modelBuilder.ApplyConfiguration(new CheckInOutConfiguration());
 
         }
 
-        DbSet<AppUser> AppUsers { get; set; }
-        DbSet<CheckInOut> CheckInOuts { get; set; }
+        DbSet<AppUser> AppUser { get; set; }
+        DbSet<CheckInOut> CheckInOut { get; set; }
     }
 }

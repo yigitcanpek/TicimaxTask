@@ -11,13 +11,13 @@ namespace TicimaxTask.Entities.Entities.Models
     {
         public BaseEntity()
         {
-            CreatedDate = DateTime.Now;
+          
             Status = DataStatus.Inserted;
         }
 
         public int ID { get; set; }
 
-        public DateTime? CreatedDate { get; private set; }
+        public DateTime? CreatedDate { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
 

@@ -10,11 +10,11 @@ using TicimaxTask.Entities.Entities.Models;
 
 namespace TicimaxTask.MAP.NewFolder
 {
-    public class BaseConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
+    public abstract class BaseConfiguration<T> : IEntityTypeConfiguration<T> where T : BaseEntity
     {
-        public void Configure(EntityTypeBuilder<T> builder)
+        public virtual void Configure(EntityTypeBuilder<T> builder)
         {
-            //You can Configure all properties in BaseEntity
+            //You can all database entity's configuration from here.
         }
     }
 }

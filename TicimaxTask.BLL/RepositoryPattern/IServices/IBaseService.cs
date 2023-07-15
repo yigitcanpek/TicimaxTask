@@ -4,14 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TicimaxTask.Entities.Entities.Models;
-using TicimaxTask.Shared.BaseModels;
+using TicimaxTask.Shared.Dtos;
 
-namespace TicimaxTask.BLL.RepositoryPattern.IRepositories
+namespace TicimaxTask.BLL.RepositoryPattern.IServices
 {
-    public interface IBaseRepository<T> where T : BaseEntity
+    public interface IBaseService<T> where T : BaseEntity
     {
+
         Task<Response<T>> CreateAsync(T item);
-        Response<T> UpdateAsync(T item);
+        Response<T> Update(T item);
         Task<Response<T>> DeleteAsync(int id);
         Task<Response<List<T>>> GetAllAsync();
         Task<Response<T>> GetByIdAsync(int id);

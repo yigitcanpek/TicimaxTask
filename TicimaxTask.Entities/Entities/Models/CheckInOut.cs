@@ -9,18 +9,15 @@ namespace TicimaxTask.Entities.Entities.Models
 {
     public class CheckInOut:BaseEntity
     {
-        public CheckInOut()
-        {
-            CheckTime = DateTime.Now;
-        }
+      
 
-        public DateTime CheckTime { get; private set; }
+        public DateTime CheckTime { get; set; }
 
         public CheckStatus CheckType { get; set; }
 
 
         //Relational Properties
-        public AppUser AppUser { get; set; }
+        public AppUser? AppUser { get; set; }
 
         public int AppUserID { get; set; }
     }
