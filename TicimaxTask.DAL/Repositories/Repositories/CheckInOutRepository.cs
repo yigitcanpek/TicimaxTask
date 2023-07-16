@@ -67,7 +67,8 @@ namespace TicimaxTask.DAL.Repositories.Repositories
 
         public async Task<bool> EnterAsync(CheckInOut checkInOut)
         {
-            
+            checkInOut.CheckTime = DateTime.Now.ToUniversalTime();
+            checkInOut.CreatedDate = DateTime.Now.ToUniversalTime();
             await _dbSet.AddAsync(checkInOut);
             _context.SaveChanges();
             return true;
@@ -75,6 +76,8 @@ namespace TicimaxTask.DAL.Repositories.Repositories
 
         public async Task<bool> ExitAsync(CheckInOut checkInOut)
         {
+            checkInOut.CheckTime = DateTime.Now.ToUniversalTime();
+            checkInOut.CreatedDate = DateTime.Now.ToUniversalTime();
             await _dbSet.AddAsync(checkInOut);
             _context.SaveChanges();
             return true;

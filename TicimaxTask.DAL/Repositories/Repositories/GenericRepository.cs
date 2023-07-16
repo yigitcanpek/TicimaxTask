@@ -58,7 +58,7 @@ namespace TicimaxTask.DAL.Repositories.Repositories
         {
 
             
-                item.ModifiedDate = DateTime.Now;
+                item.ModifiedDate = DateTime.UtcNow;
                 item.Status = Entities.Entities.Enums.DataStatus.Updated;
                 T toBeUpdated = _dbSet.Find(item.ID);
                 _dbSet.Entry(toBeUpdated).CurrentValues.SetValues(item);

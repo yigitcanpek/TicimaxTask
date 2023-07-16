@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using TicimaxTask.BLL.RepositoryPattern.IServices;
 using TicimaxTask.Entities.Entities.Models;
 using TicimaxTask.MovementAPI.DTOs;
+using TicimaxTask.MovementAPI.RabbitMq.PublisherServices;
 using TicimaxTask.Shared.ControllerBases;
 using TicimaxTask.Shared.Dtos;
 
@@ -11,42 +13,52 @@ namespace TicimaxTask.MovementAPI.Controllers
 
     public class CheckInOutController : CustomBaseController
     {
-
+        private readonly RabbitMQPublisher _rabbitMQPublisher;
         private readonly IBaseService<AppUser> _appUserService;
         private readonly IBaseService<CheckInOut> _checkInOutService;
         private readonly ICheckInOutService _checkInOut;
 
-        public CheckInOutController(IBaseService<AppUser> appUserService, IBaseService<CheckInOut> checkInOutService, ICheckInOutService checkInOut)
+        public CheckInOutController(IBaseService<AppUser> appUserService, IBaseService<CheckInOut> checkInOutService, ICheckInOutService checkInOut, RabbitMQPublisher rabbitMQPublisher)
         {
             _appUserService = appUserService;
             _checkInOutService = checkInOutService;
             _checkInOut = checkInOut;
+            _rabbitMQPublisher = rabbitMQPublisher;
         }
 
         [HttpPost]
         [Route("enter")]
         public async Task<IActionResult> Enter(CheckInOut checkIn)
         {
-            Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkIn.AppUserID);
-            checkIn.AppUser = checkOwnerUser.Data;
-            checkIn.CheckType = Entities.Entities.Enums.CheckStatus.CheckIn;
-            Response<bool> response = await _checkInOut.EnterAsync(checkIn);
+            //Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkIn.AppUserID);
+            //checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckIn;
+            //_appUserService.Update(checkOwnerUser.Data);
+            //checkIn.AppUser = checkOwnerUser.Data;
+            //checkIn.CheckType = Entities.Entities.Enums.CheckStatus.CheckIn;
+            //Response<bool> response = await _checkInOut.EnterAsync(checkIn);
 
+        
 
+            _rabbitMQPublisher.Publish(checkIn,"EnterExchange", "EnterRoute", "EnterQueue");
 
-            return CreateActionResultInstance(response);
+            return CreateActionResultInstance(Response<CheckInOut>.Success(checkIn,200));
         }
 
         [HttpPost]
         [Route("exit")]
         public async Task<IActionResult> Exit(CheckInOut checkOut)
         {
-            Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkOut.AppUserID);
-            checkOut.AppUser = checkOwnerUser.Data;
-            checkOut.CheckType = Entities.Entities.Enums.CheckStatus.CheckOut;
-            Response<bool> response = await _checkInOut.ExitAsync(checkOut);
+            //Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkOut.AppUserID);
+            //checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckOut;
+            //_appUserService.Update(checkOwnerUser.Data);
+            //checkOut.AppUser = checkOwnerUser.Data;
+            //checkOut.CheckType = Entities.Entities.Enums.CheckStatus.CheckOut;
+            //Response<bool> response = await _checkInOut.ExitAsync(checkOut);
 
-            return CreateActionResultInstance(response);
+
+            _rabbitMQPublisher.Publish(checkOut, "EnterExchange", "EnterRoute", "EnterQueue");
+
+            return CreateActionResultInstance(Response<CheckInOut>.Success(checkOut, 200));
         }
 
         [HttpGet("{id}")]
