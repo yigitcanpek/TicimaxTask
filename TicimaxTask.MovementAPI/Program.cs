@@ -29,7 +29,7 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped(typeof(IBaseService<>), typeof(BaseService<>));
 
 
-builder.Services.AddHostedService<EnterConsumerService>();
+builder.Services.AddHostedService<EnterExitConsumerService>();
 builder.Services.AddDbContext<PostgreSqlContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("PostgreSql"), mgrt => mgrt.MigrationsAssembly("TicimaxTask.DAL")));
 
 

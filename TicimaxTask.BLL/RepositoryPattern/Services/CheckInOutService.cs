@@ -19,14 +19,13 @@ namespace TicimaxTask.BLL.RepositoryPattern.Services
         {
             _checkInOut = checkInOut;
         }
-
         public async Task<Response<bool>> EnterAsync(CheckInOut checkInOut)
         {
             try
             {
 
                 await _checkInOut.EnterAsync(checkInOut);
-                return Response<bool>.Success(true,200);
+                return Response<bool>.Success(true, 200);
             }
             catch (Exception ex)
             {
@@ -40,7 +39,7 @@ namespace TicimaxTask.BLL.RepositoryPattern.Services
             try
             {
                 await _checkInOut.ExitAsync(checkInOut);
-                return Response<bool>.Success(true,200);
+                return Response<bool>.Success(true, 200);
             }
             catch (Exception ex)
             {
@@ -49,27 +48,27 @@ namespace TicimaxTask.BLL.RepositoryPattern.Services
             }
         }
 
-        public async Task<Response<List<ReportDto>>> GetReport(int id, DateTime firstDate, DateTime secondDate)
+        public async Task<Response<List<ReportDtoByDateScope>>> GetReport(int id, DateTime? firstDate, DateTime? secondDate)
         {
             try
             {
-                List<ReportDto> reports =await _checkInOut.GetReport(id, firstDate, secondDate);
-                return Response<List<ReportDto>>.Success(reports,200);
+                List<ReportDtoByDateScope> reports = await _checkInOut.GetReport(id, firstDate, secondDate);
+                return Response<List<ReportDtoByDateScope>>.Success(reports, 200);
             }
             catch (Exception ex)
             {
 
-                return  Response<List<ReportDto>>.Fail($"{ex.Message}", 400);
+                return Response<List<ReportDtoByDateScope>>.Fail($"{ex.Message}", 400);
             }
         }
 
-        public async Task<Response<List<CheckInOut>>> GetUserMovementsWithDate(int userId, DateTime firstDate, DateTime secondDate)
+        public async Task<Response<List<CheckInOut>>> GetUserMovementsWithDate(int userId, DateTime? firstDate, DateTime? secondDate)
         {
             try
             {
                 List<CheckInOut> report = await _checkInOut.GetUserMovementsWithDate(userId, firstDate, secondDate);
-                
-                return Response<List<CheckInOut>>.Success(report,200);
+
+                return Response<List<CheckInOut>>.Success(report, 200);
             }
             catch (Exception ex)
             {

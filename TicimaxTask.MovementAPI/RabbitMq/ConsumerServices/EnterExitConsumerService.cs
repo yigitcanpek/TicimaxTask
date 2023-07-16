@@ -12,18 +12,18 @@ using TicimaxTask.BLL.RepositoryPattern.IServices;
 
 namespace TicimaxTask.MovementAPI.RabbitMq.ConsumerServices
 {
-    public class EnterConsumerService:BackgroundService 
+    public class EnterExitConsumerService:BackgroundService 
     {
 
         private readonly RabbitMqClientService _rabbitMqClientService;
-        private readonly ILogger<EnterConsumerService> _logger;
+        private readonly ILogger<EnterExitConsumerService> _logger;
         private IModel _channel;
         private readonly IServiceScopeFactory _serviceScopeFactory;
-        public static string ExchangeName = "EnterExchange";
-        public static string Routing = "EnterRoute";
-        public static string QueueName = "EnterQueue";
+        public static string ExchangeName = "EnterExitExchange";
+        public static string Routing = "EnterExitRoute";
+        public static string QueueName = "EnterExitQueue";
 
-        public EnterConsumerService(RabbitMqClientService rabbitMqClientService, ILogger<EnterConsumerService> logger, IServiceScopeFactory serviceScopeFactory)
+        public EnterExitConsumerService(RabbitMqClientService rabbitMqClientService, ILogger<EnterExitConsumerService> logger, IServiceScopeFactory serviceScopeFactory)
         {
 
 
@@ -70,14 +70,23 @@ namespace TicimaxTask.MovementAPI.RabbitMq.ConsumerServices
                             IBaseService<AppUser> _appUserService = scope.ServiceProvider.GetRequiredService<IBaseService<AppUser>>();
                             ICheckInOutService _checkInOutService = scope.ServiceProvider.GetRequiredService<ICheckInOutService>();
                             string json = reader.ReadToEnd();
-                            CheckInOut checkIn = JsonConvert.DeserializeObject<CheckInOut>(json);
-                            Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkIn.AppUserID);
-                            checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckIn;
-                            _appUserService.Update(checkOwnerUser.Data);
-                            checkIn.AppUser = checkOwnerUser.Data;
-                            checkIn.CheckType = Entities.Entities.Enums.CheckStatus.CheckIn;
-                            Response<bool> response = await _checkInOutService.EnterAsync(checkIn);
-
+                            CheckInOut checkInOut = JsonConvert.DeserializeObject<CheckInOut>(json);
+                            Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkInOut.AppUserID);
+                           
+                            if (checkInOut.CheckType == Entities.Entities.Enums.CheckStatus.CheckIn)
+                            {
+                                checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckIn;
+                                _appUserService.Update(checkOwnerUser.Data);
+                                checkInOut.AppUser = checkOwnerUser.Data;
+                                await _checkInOutService.EnterAsync(checkInOut);
+                            }
+                            else
+                            {
+                                checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckOut;
+                                _appUserService.Update(checkOwnerUser.Data);
+                                checkInOut.AppUser = checkOwnerUser.Data;
+                                await _checkInOutService.ExitAsync(checkInOut);
+                            }
                             _channel.BasicAck(@event.DeliveryTag, false);
 
                         }

@@ -12,7 +12,7 @@ namespace TicimaxTask.BLL.RepositoryPattern.IServices
     {
         Task<Response<bool>> EnterAsync(CheckInOut checkInOut);
         Task<Response<bool>> ExitAsync(CheckInOut checkInOut);
-        Task<Response<List<ReportDto>>> GetReport(int id, DateTime firstDate, DateTime secondDate);
-        Task<Response<List<CheckInOut>>> GetUserMovementsWithDate(int userId, DateTime firstDate, DateTime secondDate);
+        Task<Response<List<ReportDtoByDateScope>>> GetReport(int id, DateTime? firstDate, DateTime? secondDate);
+        Task<Response<List<CheckInOut>>> GetUserMovementsWithDate(int userId, DateTime? firstDate, DateTime? secondDate);
     }
 }

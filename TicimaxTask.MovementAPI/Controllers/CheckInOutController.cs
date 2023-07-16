@@ -17,6 +17,7 @@ namespace TicimaxTask.MovementAPI.Controllers
         private readonly IBaseService<AppUser> _appUserService;
         private readonly IBaseService<CheckInOut> _checkInOutService;
         private readonly ICheckInOutService _checkInOut;
+        TimeZoneInfo easternEuropeanTimeZone = TimeZoneInfo.CreateCustomTimeZone("Eastern European Standard Time", TimeSpan.FromHours(3), "Eastern European Standard Time", "Eastern European Standard Time");
 
         public CheckInOutController(IBaseService<AppUser> appUserService, IBaseService<CheckInOut> checkInOutService, ICheckInOutService checkInOut, RabbitMQPublisher rabbitMQPublisher)
         {
@@ -25,95 +26,142 @@ namespace TicimaxTask.MovementAPI.Controllers
             _checkInOut = checkInOut;
             _rabbitMQPublisher = rabbitMQPublisher;
         }
-
         [HttpPost]
         [Route("enter")]
         public async Task<IActionResult> Enter(CheckInOut checkIn)
         {
-            //Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkIn.AppUserID);
-            //checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckIn;
-            //_appUserService.Update(checkOwnerUser.Data);
-            //checkIn.AppUser = checkOwnerUser.Data;
-            //checkIn.CheckType = Entities.Entities.Enums.CheckStatus.CheckIn;
-            //Response<bool> response = await _checkInOut.EnterAsync(checkIn);
+            try
+            {
+                Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkIn.AppUserID);
+                checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckIn;
+                _appUserService.Update(checkOwnerUser.Data);
+                checkIn.AppUser = checkOwnerUser.Data;
+                checkIn.CheckType = Entities.Entities.Enums.CheckStatus.CheckIn;
 
-        
 
-            _rabbitMQPublisher.Publish(checkIn,"EnterExchange", "EnterRoute", "EnterQueue");
 
-            return CreateActionResultInstance(Response<CheckInOut>.Success(checkIn,200));
+                _rabbitMQPublisher.Publish(checkIn, "EnterExitExchange", "EnterExitRoute", "EnterExitQueue");
+
+                return CreateActionResultInstance(Response<CheckInOut>.Success(checkIn, 200));
+            }
+            catch (Exception ex)
+            {
+
+                return CreateActionResultInstance(Response<CheckInOut>.Fail($"{ex.Message}", 400));
+            }
         }
 
         [HttpPost]
         [Route("exit")]
         public async Task<IActionResult> Exit(CheckInOut checkOut)
         {
-            //Response<AppUser?> checkOwnerUser = await _appUserService.GetByIdAsync(checkOut.AppUserID);
-            //checkOwnerUser.Data.CheckStatus = Entities.Entities.Enums.CheckStatus.CheckOut;
-            //_appUserService.Update(checkOwnerUser.Data);
-            //checkOut.AppUser = checkOwnerUser.Data;
-            //checkOut.CheckType = Entities.Entities.Enums.CheckStatus.CheckOut;
-            //Response<bool> response = await _checkInOut.ExitAsync(checkOut);
+
+            try
+            {
+                checkOut.CheckType = Entities.Entities.Enums.CheckStatus.CheckOut;
 
 
-            _rabbitMQPublisher.Publish(checkOut, "EnterExchange", "EnterRoute", "EnterQueue");
+                _rabbitMQPublisher.Publish(checkOut, "EnterExitExchange", "EnterExitRoute", "EnterExitQueue");
 
-            return CreateActionResultInstance(Response<CheckInOut>.Success(checkOut, 200));
+                return CreateActionResultInstance(Response<CheckInOut>.Success(checkOut, 200));
+            }
+            catch (Exception ex)
+            {
+
+                return CreateActionResultInstance(Response<IActionResult>.Fail($"{ex.Message}", 400));
+            }
+           
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            
-            
-
-            Response<CheckInOut> checkInOut =  await _checkInOutService.GetByIdAsync(id);
-
-
-            GetCheckInOutByIdDTO checkDto = new()
+            try
             {
-                UserName = _appUserService.GetByIdAsync(checkInOut.Data.AppUserID).Result.Data.UserName,
-                CheckTime = checkInOut.Data.CheckTime.ToLocalTime(),
-                CheckType = checkInOut.Data.CheckType
-            };
-            
+                Response<CheckInOut> checkInOut = await _checkInOutService.GetByIdAsync(id);
 
-            return Ok(checkDto);
+
+                GetCheckInOutByIdDTO checkDto = new()
+                {
+                    UserName = _appUserService.GetByIdAsync(checkInOut.Data.AppUserID).Result.Data.UserName,
+                    CheckTime = TimeZoneInfo.ConvertTime(checkInOut.Data.CheckTime, easternEuropeanTimeZone),
+                    CheckType = checkInOut.Data.CheckType
+                };
+
+
+                return CreateActionResultInstance(Response<GetCheckInOutByIdDTO>.Success(checkDto, 200));
+            }
+            catch (Exception ex)
+            {
+
+                return CreateActionResultInstance(Response<GetCheckInOutByIdDTO>.Fail($"{ex.Message}", 400));
+            }
+
+
+          
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int personId,DateTime dateStart,DateTime dateEnd)
+        public async Task<IActionResult> Get(int personId, DateTime? dateStart, DateTime? dateEnd)
         {
-            Response<List<CheckInOut>> report = await _checkInOut.GetUserMovementsWithDate(personId, dateStart, dateEnd);
-
-
-            List<GetCheckInOutByIdDTO> checkDto = new();
-
-
-            foreach (CheckInOut item in report.Data)
+            try
             {
-                GetCheckInOutByIdDTO dto = new GetCheckInOutByIdDTO()
+                Response<List<CheckInOut>> report = await _checkInOut.GetUserMovementsWithDate(personId, dateStart, dateEnd);
+
+                if (report.Data == null)
                 {
-                    UserName = _appUserService.GetByIdAsync(personId).Result.Data.Name,
-                    CheckType = item.CheckType,
-                    CheckTime = item.CheckTime
-                };
-                checkDto.Add(dto);
+                    return CreateActionResultInstance(Response<List<GetCheckInOutByIdDTO>>.Success(null, 200));
+                }
+
+                List<GetCheckInOutByIdDTO> checkDto = new();
+                foreach (CheckInOut item in report.Data)
+                {
+                    GetCheckInOutByIdDTO dto = new GetCheckInOutByIdDTO()
+                    {
+                        UserName = _appUserService.GetByIdAsync(item.AppUserID).Result.Data.Name,
+                        CheckType = item.CheckType,
+                        CheckTime = TimeZoneInfo.ConvertTime(item.CheckTime, easternEuropeanTimeZone),
+                    };
+                    checkDto.Add(dto);
+
+                }
+                return CreateActionResultInstance(Response<List<GetCheckInOutByIdDTO>>.Success(checkDto, 200));
             }
-                return CreateActionResultInstance(Response<List<GetCheckInOutByIdDTO>>.Success(checkDto,200));
+            catch (Exception ex)
+            {
+
+                return CreateActionResultInstance(Response<IActionResult>.Fail($"{ex.Message}", 400));
+            }
         }
 
         [HttpGet]
         [Route("reports")]
-        public async Task<IActionResult> GetReports(int personId, DateTime dateStart, DateTime dateEnd)
+        public async Task<IActionResult> GetReports(int personId, DateTime? dateStart, DateTime? dateEnd)
         {
-           Response<List<ReportDto>> response =  await _checkInOut.GetReport(personId, dateStart, dateEnd);
-            foreach (var item in response.Data)
+            try
             {
-                item.UserName = _appUserService.GetByIdAsync(personId).Result.Data.UserName;
+                Response<List<ReportDtoByDateScope>> response = await _checkInOut.GetReport(personId, dateStart, dateEnd);
+
+                if (response.Data == null)
+                {
+                    return CreateActionResultInstance(Response<List<GetCheckInOutByIdDTO>>.Success(null, 200));
+                }
+
+                foreach (var item in response.Data)
+                {
+                    item.DateTime = TimeZoneInfo.ConvertTime(item.DateTime, easternEuropeanTimeZone);
+                    item.UserName = _appUserService.GetByIdAsync(item.UserId).Result.Data.UserName;
+
+
+                }
+                return CreateActionResultInstance(response);
             }
-            return CreateActionResultInstance(response);
+            catch (Exception ex)
+            {
+
+                return CreateActionResultInstance(Response<IActionResult>.Fail($"{ex.Message}", 400));
+            }
         }
-       
+
     }
 }

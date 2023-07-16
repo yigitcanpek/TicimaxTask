@@ -12,8 +12,8 @@ namespace TicimaxTask.DAL.Repositories.Interfaces
     {
         Task<bool> EnterAsync(CheckInOut checkInOut);
         Task<bool> ExitAsync(CheckInOut checkInOut);
-        Task<List<ReportDto>> GetReport(int id, DateTime firstDate, DateTime secondDate);
-        Task<List<CheckInOut>> GetUserMovementsWithDate(int userId, DateTime firstDate, DateTime secondDate);
+        Task<List<ReportDtoByDateScope>> GetReport(int id, DateTime? firstDate, DateTime? secondDate);
+        Task<List<CheckInOut>> GetUserMovementsWithDate(int userId, DateTime? firstDate, DateTime? secondDate);
 
     }
 }
